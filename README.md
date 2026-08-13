@@ -113,4 +113,9 @@ npm run dev
 
 ---
 
+## 📝 Assumptions & Notes
+For a detailed breakdown of mocked data, implementation boundaries, and technical assumptions (such as bypassing E2E encryption), please read the [Assumptions & Mocked Data Document](./ASSUMPTIONS.md).
+
+---
+
 > **Built for the Scaler SDE Fullstack Assignment.** Encrypted End-to-End (E2E) protocols have been bypassed to prioritize core user experience, UI replication, and standard WebSocket relay implementations as per the assignment constraints.
