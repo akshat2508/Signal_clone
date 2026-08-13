@@ -53,17 +53,11 @@ export function Sidebar() {
     <div className="w-80 border-r border-gray-200 bg-[#F6F6F6] flex flex-col h-full">
       {/* Header & Search */}
       <div className="h-[60px] flex items-center px-4 gap-3 shrink-0">
-        <div className="flex items-center gap-2 relative group cursor-pointer shrink-0">
-          <div className="relative">
-            <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center font-semibold text-primary">
-              {user?.display_name.charAt(0).toUpperCase()}
-            </div>
-            {/* Hidden logout button on hover */}
-            <div className="absolute top-0 left-0 w-8 h-8 rounded-full bg-black/50 hidden group-hover:flex items-center justify-center" onClick={handleLogout} title="Logout">
-              <LogOut className="w-4 h-4 text-white" />
-            </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center font-semibold text-primary">
+            {user?.display_name.charAt(0).toUpperCase()}
           </div>
-          <span className="text-[13px] font-semibold text-black truncate max-w-[80px]">
+          <span className="text-[13px] font-semibold text-black truncate max-w-[80px]" title={user?.display_name}>
             {user?.display_name}
           </span>
         </div>
@@ -78,9 +72,14 @@ export function Sidebar() {
           />
         </div>
 
-        <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-500 shrink-0 hover:bg-gray-200" onClick={() => setIsNewChatOpen(true)}>
-          <Edit className="w-4 h-4" />
-        </Button>
+        <div className="flex items-center gap-1 shrink-0">
+          <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-500 hover:bg-gray-200" onClick={() => setIsNewChatOpen(true)} title="New Chat">
+            <Edit className="w-4 h-4" />
+          </Button>
+          <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-500 hover:bg-red-100 hover:text-red-600" onClick={handleLogout} title="Logout">
+            <LogOut className="w-4 h-4" />
+          </Button>
+        </div>
       </div>
 
       {/* Conversations List */}
