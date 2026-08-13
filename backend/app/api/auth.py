@@ -68,8 +68,8 @@ def login(req: schemas.LoginRequest, response: Response, db: Session = Depends(g
         key="session_token",
         value=db_session.token,
         httponly=True,
-        secure=False, # Set to True in production with HTTPS
-        samesite="lax",
+        secure=True, # Set to True in production with HTTPS
+        samesite="none",
         max_age=7 * 24 * 60 * 60 # 7 days
     )
     
