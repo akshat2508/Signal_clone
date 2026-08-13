@@ -1,3 +1,5 @@
+import os
+import subprocess
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
@@ -6,6 +8,16 @@ app = FastAPI(
     title=settings.PROJECT_NAME,
     version="1.0.0"
 )
+
+@app.on_event("startup")
+def startup_event():
+    # Run alembic migrations automatically on startup
+    print("Running database migrations...")
+    try:
+        subprocess.run(["alembic", "upgrade", "head"], check=True)
+        print("Database migrations completed successfully.")
+    except Exception as e:
+        print(f"Error running database migrations: {e}")
 
 # CORS configuration
 app.add_middleware(
