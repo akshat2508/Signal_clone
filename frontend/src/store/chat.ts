@@ -62,8 +62,8 @@ export const useChatStore = create<ChatState>((set) => ({
     return { messages: [...state.messages, message] };
   }),
   updateConversationLatestMessage: (conversationId, message) => set((state) => ({
-    conversations: state.conversations.map(conv => 
-      conv.id === conversationId 
+    conversations: state.conversations.map(conv =>
+      conv.id === conversationId
         ? { ...conv, latest_message: message }
         : conv
     )

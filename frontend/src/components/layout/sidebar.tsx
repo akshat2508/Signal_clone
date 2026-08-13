@@ -45,7 +45,7 @@ export function Sidebar() {
     return otherMember?.user?.display_name || "Unknown User";
   };
 
-  const filteredConversations = conversations.filter(conv => 
+  const filteredConversations = conversations.filter(conv =>
     getConversationName(conv)?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -67,17 +67,17 @@ export function Sidebar() {
             {user?.display_name}
           </span>
         </div>
-        
+
         <div className="relative flex-1">
           <Search className="w-4 h-4 absolute left-3 top-2.5 text-gray-500" />
-          <Input 
-            placeholder="Search" 
+          <Input
+            placeholder="Search"
             className="pl-9 bg-[#EBEBEB] border-none rounded-full h-9 text-[13px] focus-visible:ring-0 text-black placeholder:text-gray-500"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        
+
         <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-500 shrink-0 hover:bg-gray-200" onClick={() => setIsNewChatOpen(true)}>
           <Edit className="w-4 h-4" />
         </Button>
@@ -91,17 +91,16 @@ export function Sidebar() {
           const isActive = activeConversationId === conv.id;
 
           return (
-            <div 
+            <div
               key={conv.id}
               onClick={() => setActiveConversationId(conv.id)}
-              className={`flex items-center gap-3 p-3 cursor-pointer transition-colors relative ${
-                isActive ? "bg-[#EAEAEA]" : "hover:bg-[#F0F0F0]"
-              }`}
+              className={`flex items-center gap-3 p-3 cursor-pointer transition-colors relative ${isActive ? "bg-[#EAEAEA]" : "hover:bg-[#F0F0F0]"
+                }`}
             >
               {isUnread && (
                 <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#3366FF]" />
               )}
-              
+
               <div className="relative ml-1 shrink-0">
                 <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center font-medium text-black">
                   {getConversationName(conv)?.charAt(0).toUpperCase()}
@@ -112,7 +111,7 @@ export function Sidebar() {
                   </div>
                 )}
               </div>
-              
+
               <div className="flex-1 min-w-0 flex flex-col justify-center">
                 <div className="flex justify-between items-baseline mb-0.5">
                   <h3 className={`truncate text-[15px] text-black ${isUnread ? 'font-bold' : 'font-semibold'}`}>

@@ -20,7 +20,7 @@ export function ChatArea() {
   // Fetch messages
   useEffect(() => {
     if (!activeConversationId) return;
-    
+
     const fetchMessages = async () => {
       try {
         const { data } = await apiClient.get(`/conversations/${activeConversationId}/messages`);
@@ -29,7 +29,7 @@ export function ChatArea() {
         console.error("Failed to fetch messages", error);
       }
     };
-    
+
     fetchMessages();
   }, [activeConversationId, setMessages]);
 
@@ -116,49 +116,48 @@ export function ChatArea() {
           {messages.map((msg, index) => {
             const isMine = msg.sender_id === user?.id;
             const showDate = index === 0 || new Date(msg.created_at).getDate() !== new Date(messages[index - 1].created_at).getDate();
-          
-          return (
-            <div key={msg.id}>
-              {showDate && (
-                <div className="flex justify-center my-4">
-                  <span className="bg-white/80 dark:bg-gray-800/80 backdrop-blur text-xs font-medium px-3 py-1 rounded-full text-muted-foreground shadow-sm">
-                    {format(new Date(msg.created_at), "MMM d, yyyy")}
-                  </span>
-                </div>
-              )}
-              <div className={`flex ${isMine ? "justify-end" : "justify-start items-end gap-2"} mb-2`}>
-                {!isMine && (
-                  <div className="w-8 h-8 rounded-full bg-gray-300 flex-shrink-0 flex items-center justify-center text-sm font-medium text-black">
-                    {(msg.sender?.display_name || "U").charAt(0).toUpperCase()}
+
+            return (
+              <div key={msg.id}>
+                {showDate && (
+                  <div className="flex justify-center my-4">
+                    <span className="bg-white/80 dark:bg-gray-800/80 backdrop-blur text-xs font-medium px-3 py-1 rounded-full text-muted-foreground shadow-sm">
+                      {format(new Date(msg.created_at), "MMM d, yyyy")}
+                    </span>
                   </div>
                 )}
-                <div 
-                  className={`relative max-w-[70%] px-[14px] py-[10px] shadow-sm ${
-                    isMine 
-                      ? "bg-[#3366FF] text-white rounded-[20px] rounded-br-sm" 
-                      : "bg-[#EAEAEA] text-black rounded-[20px] rounded-bl-sm"
-                  }`}
-                >
-                  {activeConversation.type === "GROUP" && !isMine && (
-                    <p className="text-[13px] font-bold text-black mb-0.5">
-                      {msg.sender?.display_name || "Unknown User"}
-                    </p>
+                <div className={`flex ${isMine ? "justify-end" : "justify-start items-end gap-2"} mb-2`}>
+                  {!isMine && (
+                    <div className="w-8 h-8 rounded-full bg-gray-300 flex-shrink-0 flex items-center justify-center text-sm font-medium text-black">
+                      {(msg.sender?.display_name || "U").charAt(0).toUpperCase()}
+                    </div>
                   )}
-                  <p className="text-[15px] leading-[1.4] break-words">{msg.body}</p>
-                  <div className={`text-[11px] flex items-center gap-1 mt-1 font-medium ${isMine ? "text-white/90 justify-end" : "text-gray-500 justify-start"}`}>
-                    {format(new Date(msg.created_at), "HH:mm")}
-                    {isMine && (
-                      <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 ml-0.5" fill="currentColor">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                      </svg>
+                  <div
+                    className={`relative max-w-[70%] px-[14px] py-[10px] shadow-sm ${isMine
+                        ? "bg-[#3366FF] text-white rounded-[20px] rounded-br-sm"
+                        : "bg-[#EAEAEA] text-black rounded-[20px] rounded-bl-sm"
+                      }`}
+                  >
+                    {activeConversation.type === "GROUP" && !isMine && (
+                      <p className="text-[13px] font-bold text-black mb-0.5">
+                        {msg.sender?.display_name || "Unknown User"}
+                      </p>
                     )}
+                    <p className="text-[15px] leading-[1.4] break-words">{msg.body}</p>
+                    <div className={`text-[11px] flex items-center gap-1 mt-1 font-medium ${isMine ? "text-white/90 justify-end" : "text-gray-500 justify-start"}`}>
+                      {format(new Date(msg.created_at), "HH:mm")}
+                      {isMine && (
+                        <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 ml-0.5" fill="currentColor">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                        </svg>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
-        <div ref={messagesEndRef} />
+            );
+          })}
+          <div ref={messagesEndRef} />
         </div>
       </div>
       {/* Input Composer */}
@@ -168,16 +167,16 @@ export function ChatArea() {
             <PlusCircle className="w-5 h-5" />
           </Button>
           <div className="flex-1 relative">
-            <Input 
+            <Input
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              placeholder="Message" 
+              placeholder="Message"
               className="w-full rounded-full bg-[#F0F0F0] border-none h-10 pl-5 pr-12 text-[15px] focus-visible:ring-0 text-black placeholder:text-gray-500"
             />
           </div>
-          <Button 
-            type="submit" 
-            size="icon" 
+          <Button
+            type="submit"
+            size="icon"
             disabled={!inputText.trim()}
             className={`rounded-full h-10 w-10 shrink-0 transition-colors ${inputText.trim() ? 'bg-primary hover:bg-blue-600' : 'bg-gray-200 text-gray-400'}`}
           >

@@ -20,20 +20,20 @@ export default function Home() {
     const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
     const backendHost = isDev ? "localhost:8000" : window.location.host;
     const wsUrl = process.env.NEXT_PUBLIC_WS_URL || `${wsProtocol}//${backendHost}/ws/conversations`;
-    
+
     // Fallback if rewrites fail, but standard is /ws for our new endpoint
     const ws = new WebSocket(wsUrl);
-    
+
     ws.onopen = () => console.log("Global WebSocket Connected!");
     ws.onclose = (e) => console.log("Global WebSocket Closed!", e.code, e.reason);
-    
+
     ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        
+
         if (data.type === 'NEW_MESSAGE') {
           const message = data.message;
-          
+
           // Only add to the active view if it belongs to the active conversation
           // The store expects addMessage to add it to the 'messages' array, 
           // which represents the currently active chat's messages.
@@ -42,11 +42,11 @@ export default function Home() {
           if (useChatStore.getState().activeConversationId === message.conversation_id) {
             addMessage(message);
           }
-          
+
           // Always update the conversation list with latest_message
           updateConversationLatestMessage(message.conversation_id, message);
         }
-        
+
         if (data.type === 'NEW_CONVERSATION') {
           // A new group or direct message was created, refresh sidebar
           apiClient.get("/conversations/").then((res) => {
