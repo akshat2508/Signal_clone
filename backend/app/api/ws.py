@@ -27,57 +27,37 @@ async def get_ws_current_user(websocket: WebSocket, db: Session):
     user = db.query(User).filter(User.id == db_session.user_id).first()
     return user
 
-@router.websocket("/{conversation_id}")
-async def websocket_endpoint(websocket: WebSocket, conversation_id: str, db: Session = Depends(get_db)):
+@router.websocket("")
+async def websocket_endpoint(websocket: WebSocket, db: Session = Depends(get_db)):
+    print("WEBSOCKET CONNECTION ATTEMPT!")
     user = await get_ws_current_user(websocket, db)
     if not user:
+        print("WEBSOCKET NO USER!")
         await websocket.close(code=1008)
         return
         
-    # Check authorization
-    try:
-        conv_uuid = uuid.UUID(conversation_id)
-    except ValueError:
-        await websocket.close(code=1008)
-        return
-        
-    member = db.query(ConversationMember).filter(
-        ConversationMember.conversation_id == conv_uuid,
-        ConversationMember.user_id == user.id
-    ).first()
+    print(f"WEBSOCKET CONNECTING USER {user.id}")
+    await manager.connect(websocket, str(user.id))
     
-    if not member:
-        await websocket.close(code=1008)
-        return
-        
-    await manager.connect(websocket, conversation_id, str(user.id))
-    
-    # Broadcast user online
-    await manager.broadcast_to_conversation(
-        conversation_id,
-        {
-            "type": "USER_ONLINE",
-            "conversation_id": conversation_id,
-            "user_id": str(user.id)
-        }
-    )
+    # Broadcast user online status to all conversations they are part of
+    # To keep it simple, we can just let clients periodically fetch online status,
+    # or implement a global presence system later.
     
     try:
         while True:
             data = await websocket.receive_json()
             # Simple relay of typing events for now
             if data.get("type") in ["TYPING_STARTED", "TYPING_STOPPED"]:
-                data["user_id"] = str(user.id)
-                data["conversation_id"] = conversation_id
-                await manager.broadcast_to_conversation(conversation_id, data)
+                conversation_id = data.get("conversation_id")
+                if conversation_id:
+                    # Get all members of the conversation
+                    members = db.query(ConversationMember).filter(
+                        ConversationMember.conversation_id == conversation_id
+                    ).all()
+                    member_ids = [str(m.user_id) for m in members if m.user_id != user.id]
+                    
+                    data["user_id"] = str(user.id)
+                    await manager.broadcast_to_users(member_ids, data)
                 
     except WebSocketDisconnect:
-        manager.disconnect(websocket, conversation_id, str(user.id))
-        await manager.broadcast_to_conversation(
-            conversation_id,
-            {
-                "type": "USER_OFFLINE",
-                "conversation_id": conversation_id,
-                "user_id": str(user.id)
-            }
-        )
+        manager.disconnect(websocket, str(user.id))

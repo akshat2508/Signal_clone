@@ -81,7 +81,7 @@ def create_direct(req: schemas.ConversationCreateDirect, current_user: CurrentUs
     return conv
 
 @router.post("/group", response_model=schemas.ConversationResponse)
-def create_group(req: schemas.ConversationCreateGroup, current_user: CurrentUser, db: Session = Depends(get_db)):
+async def create_group(req: schemas.ConversationCreateGroup, current_user: CurrentUser, db: Session = Depends(get_db)):
     conv = Conversation(
         type="GROUP",
         name=req.name,
@@ -98,6 +98,25 @@ def create_group(req: schemas.ConversationCreateGroup, current_user: CurrentUser
             
     db.add_all(members)
     db.commit()
+    
+    # Broadcast to all members
+    from app.core.websockets import manager
+    from app.schemas import ConversationResponse
+    
+    # Refresh to ensure relationships are loaded if needed
+    db.refresh(conv)
+    conv_response = ConversationResponse.model_validate(conv).model_dump(mode='json')
+    
+    member_ids = [str(m.user_id) for m in members]
+    
+    # Direct await since the route is now async
+    await manager.broadcast_to_users(
+        member_ids,
+        {
+            "type": "NEW_CONVERSATION",
+            "conversation": conv_response
+        }
+    )
     
     return conv
 
@@ -177,8 +196,10 @@ async def send_message(conversation_id: uuid.UUID, req: schemas.MessageCreate, c
     
     msg_response = MessageResponse.model_validate(message).model_dump(mode='json')
     
-    await manager.broadcast_to_conversation(
-        str(conversation_id),
+    member_ids = [str(m.user_id) for m in members]
+    
+    await manager.broadcast_to_users(
+        member_ids,
         {
             "type": "NEW_MESSAGE",
             "message": msg_response

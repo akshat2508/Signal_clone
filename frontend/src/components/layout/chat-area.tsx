@@ -13,7 +13,6 @@ export function ChatArea() {
   const { user } = useAuthStore();
   const { activeConversationId, conversations, messages, setMessages, addMessage, updateConversationLatestMessage } = useChatStore();
   const [inputText, setInputText] = useState("");
-  const wsRef = useRef<WebSocket | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const activeConversation = conversations.find(c => c.id === activeConversationId);
@@ -33,39 +32,6 @@ export function ChatArea() {
     
     fetchMessages();
   }, [activeConversationId, setMessages]);
-
-  // Setup WebSocket
-  useEffect(() => {
-    if (!activeConversationId) return;
-
-    // Close previous WS if any
-    if (wsRef.current) {
-      wsRef.current.close();
-    }
-
-    const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = process.env.NEXT_PUBLIC_WS_URL || `${wsProtocol}//${window.location.host}/ws/conversations`;
-    const ws = new WebSocket(`${wsUrl}/${activeConversationId}`);
-    
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      
-      if (data.type === 'NEW_MESSAGE') {
-        const message = data.message;
-        // Avoid duplicates if we just sent it (though we update optimistic UI too)
-        addMessage(message);
-        updateConversationLatestMessage(activeConversationId, message);
-      }
-    };
-
-    wsRef.current = ws;
-
-    return () => {
-      if (ws.readyState === 1) { // OPEN
-        ws.close();
-      }
-    };
-  }, [activeConversationId]);
 
   // Auto-scroll
   useEffect(() => {
