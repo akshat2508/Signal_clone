@@ -134,8 +134,8 @@ export function ChatArea() {
                   )}
                   <div
                     className={`relative max-w-[70%] px-[14px] py-[10px] shadow-sm ${isMine
-                        ? "bg-[#3366FF] text-white rounded-[20px] rounded-br-sm"
-                        : "bg-[#EAEAEA] text-black rounded-[20px] rounded-bl-sm"
+                      ? "bg-[#3366FF] text-white rounded-[20px] rounded-br-sm"
+                      : "bg-[#EAEAEA] text-black rounded-[20px] rounded-bl-sm"
                       }`}
                   >
                     {activeConversation.type === "GROUP" && !isMine && (
