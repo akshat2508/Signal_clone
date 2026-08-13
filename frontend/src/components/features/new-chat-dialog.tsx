@@ -103,18 +103,18 @@ export function NewChatDialog({ onClose }: { onClose: () => void }) {
                 placeholder="Group Name" 
                 value={groupName}
                 onChange={(e) => setGroupName(e.target.value)}
-                className="mb-4 bg-gray-50 dark:bg-gray-900 border-none rounded-lg h-12"
+                className="mb-4 bg-[#F0F0F0] border-none rounded-lg h-12 text-black"
               />
             </div>
           )}
 
           <div className="relative mb-4">
-            <Search className="absolute left-3 top-3.5 w-4 h-4 text-muted-foreground" />
+            <Search className="absolute left-3 top-3.5 w-4 h-4 text-gray-500" />
             <Input 
               placeholder="Search users by username or phone..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 bg-gray-50 dark:bg-gray-900 border-none rounded-lg h-11"
+              className="pl-9 bg-[#F0F0F0] border-none rounded-lg h-11 text-black placeholder:text-gray-500"
             />
           </div>
 
@@ -122,7 +122,7 @@ export function NewChatDialog({ onClose }: { onClose: () => void }) {
             {users.map(user => (
               <div 
                 key={user.id} 
-                className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-900 rounded-lg cursor-pointer"
+                className="flex items-center justify-between p-3 hover:bg-[#F0F0F0] rounded-lg cursor-pointer transition-colors"
                 onClick={() => activeTab === 'direct' ? handleStartDirect(user.id) : toggleUserSelection(user.id)}
               >
                 <div className="flex items-center gap-3">
@@ -151,7 +151,7 @@ export function NewChatDialog({ onClose }: { onClose: () => void }) {
         </div>
         
         {activeTab === "group" && (
-          <div className="p-4 border-t bg-gray-50 dark:bg-gray-900/50">
+          <div className="p-4 border-t bg-[#F6F6F6]">
             <Button 
               className="w-full h-11 rounded-full" 
               onClick={handleCreateGroup}
