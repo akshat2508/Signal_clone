@@ -98,13 +98,13 @@ export function ChatArea() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" className="text-muted-foreground">
-            <Video className="w-5 h-5" />
+          <Button variant="ghost" size="icon" className="text-gray-600 hover:bg-gray-100">
+            <Video className="w-[22px] h-[22px]" />
           </Button>
-          <Button variant="ghost" size="icon" className="text-muted-foreground">
-            <Search className="w-5 h-5" />
+          <Button variant="ghost" size="icon" className="text-gray-600 hover:bg-gray-100">
+            <Search className="w-[20px] h-[20px]" />
           </Button>
-          <Button variant="ghost" size="icon" className="text-muted-foreground">
+          <Button variant="ghost" size="icon" className="text-gray-600 hover:bg-gray-100">
             <MoreVertical className="w-5 h-5" />
           </Button>
         </div>
@@ -126,24 +126,31 @@ export function ChatArea() {
                   </span>
                 </div>
               )}
-              <div className={`flex ${isMine ? "justify-end" : "justify-start"} mb-2`}>
+              <div className={`flex ${isMine ? "justify-end" : "justify-start items-end gap-2"} mb-2`}>
+                {!isMine && (
+                  <div className="w-8 h-8 rounded-full bg-gray-300 flex-shrink-0 flex items-center justify-center text-sm font-medium text-black">
+                    {(msg.sender?.display_name || "U").charAt(0).toUpperCase()}
+                  </div>
+                )}
                 <div 
-                  className={`relative max-w-[70%] px-4 py-2 rounded-[20px] shadow-sm ${
+                  className={`relative max-w-[70%] px-[14px] py-[10px] shadow-sm ${
                     isMine 
-                      ? "bg-[#3366FF] text-white rounded-br-sm" 
-                      : "bg-[#F0F2F5] dark:bg-[#202020] text-foreground rounded-bl-sm"
+                      ? "bg-[#3366FF] text-white rounded-[20px] rounded-br-sm" 
+                      : "bg-[#EAEAEA] text-black rounded-[20px] rounded-bl-sm"
                   }`}
                 >
                   {activeConversation.type === "GROUP" && !isMine && (
-                    <p className="text-[11px] font-semibold text-primary mb-0.5">
+                    <p className="text-[13px] font-bold text-black mb-0.5">
                       {msg.sender?.display_name || "Unknown User"}
                     </p>
                   )}
-                  <p className="text-[15px] leading-relaxed break-words">{msg.body}</p>
-                  <div className={`text-[11px] flex items-center gap-1 justify-end mt-0.5 opacity-80 ${isMine ? "text-white/90" : "text-muted-foreground"}`}>
+                  <p className="text-[15px] leading-[1.4] break-words">{msg.body}</p>
+                  <div className={`text-[11px] flex items-center gap-1 mt-1 font-medium ${isMine ? "text-white/90 justify-end" : "text-gray-500 justify-start"}`}>
                     {format(new Date(msg.created_at), "HH:mm")}
                     {isMine && (
-                      <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/></svg>
+                      <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 ml-0.5" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                      </svg>
                     )}
                   </div>
                 </div>
@@ -155,24 +162,26 @@ export function ChatArea() {
         </div>
       </div>
       {/* Input Composer */}
-      <div className="p-3 bg-background border-t shrink-0">
-        <form onSubmit={handleSendMessage} className="flex items-center gap-2">
-          <Button type="button" variant="ghost" size="icon" className="text-muted-foreground shrink-0">
-            <PlusCircle className="w-6 h-6" />
+      <div className="p-3 px-4 bg-white shrink-0">
+        <form onSubmit={handleSendMessage} className="flex items-center gap-3">
+          <Button type="button" variant="ghost" size="icon" className="text-gray-500 shrink-0 hover:bg-gray-100 rounded-full h-9 w-9">
+            <PlusCircle className="w-5 h-5" />
           </Button>
-          <Input 
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            placeholder="Message" 
-            className="flex-1 rounded-3xl bg-[#F0F2F5] dark:bg-[#202020] border-none h-11 px-5 text-[15px] focus-visible:ring-0"
-          />
+          <div className="flex-1 relative">
+            <Input 
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              placeholder="Message" 
+              className="w-full rounded-full bg-[#F0F0F0] border-none h-10 pl-5 pr-12 text-[15px] focus-visible:ring-0 text-black placeholder:text-gray-500"
+            />
+          </div>
           <Button 
             type="submit" 
             size="icon" 
             disabled={!inputText.trim()}
-            className={`rounded-full h-11 w-11 shrink-0 ${inputText.trim() ? 'bg-primary' : 'bg-gray-200 dark:bg-gray-800 text-gray-400 dark:text-gray-500'}`}
+            className={`rounded-full h-10 w-10 shrink-0 transition-colors ${inputText.trim() ? 'bg-primary hover:bg-blue-600' : 'bg-gray-200 text-gray-400'}`}
           >
-            <Send className="w-5 h-5" />
+            <Send className="w-[18px] h-[18px] ml-0.5" />
           </Button>
         </form>
       </div>
