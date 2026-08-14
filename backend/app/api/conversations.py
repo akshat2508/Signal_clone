@@ -132,6 +132,27 @@ def get_conversation(conversation_id: uuid.UUID, current_user: CurrentUser, db: 
     conv = db.query(Conversation).filter(Conversation.id == conversation_id).first()
     return conv
 
+@router.post("/{conversation_id}/read")
+def mark_as_read(conversation_id: uuid.UUID, current_user: CurrentUser, db: Session = Depends(get_db)):
+    member = db.query(ConversationMember).filter(
+        ConversationMember.conversation_id == conversation_id,
+        ConversationMember.user_id == current_user.id
+    ).first()
+    if not member:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    receipts = db.query(MessageReceipt).join(Message).filter(
+        MessageReceipt.user_id == current_user.id,
+        MessageReceipt.status != "READ",
+        Message.conversation_id == conversation_id
+    ).all()
+    
+    for r in receipts:
+        r.status = "READ"
+        
+    db.commit()
+    return {"status": "ok"}
+
 @router.get("/{conversation_id}/messages", response_model=List[schemas.MessageResponse])
 def get_messages(conversation_id: uuid.UUID, current_user: CurrentUser, limit: int = 50, db: Session = Depends(get_db)):
     member = db.query(ConversationMember).filter(

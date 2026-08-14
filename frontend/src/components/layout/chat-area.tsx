@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 
 export function ChatArea() {
   const { user } = useAuthStore();
-  const { activeConversationId, conversations, messages, setMessages, addMessage, updateConversationLatestMessage } = useChatStore();
+  const { activeConversationId, conversations, messages, setMessages, addMessage, updateConversationLatestMessage, markConversationAsRead } = useChatStore();
   const [inputText, setInputText] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -32,6 +32,14 @@ export function ChatArea() {
 
     fetchMessages();
   }, [activeConversationId, setMessages]);
+
+  // Mark as read when active conversation has unread messages
+  useEffect(() => {
+    if (activeConversationId && activeConversation?.unread_count && activeConversation.unread_count > 0) {
+      apiClient.post(`/conversations/${activeConversationId}/read`).catch(console.error);
+      markConversationAsRead(activeConversationId);
+    }
+  }, [activeConversationId, activeConversation?.unread_count, markConversationAsRead]);
 
   // Auto-scroll
   useEffect(() => {

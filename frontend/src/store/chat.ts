@@ -45,6 +45,7 @@ interface ChatState {
   setMessages: (messages: Message[]) => void;
   addMessage: (message: Message) => void;
   updateConversationLatestMessage: (conversationId: string, message: Message) => void;
+  markConversationAsRead: (conversationId: string) => void;
 }
 
 export const useChatStore = create<ChatState>((set) => ({
@@ -64,7 +65,18 @@ export const useChatStore = create<ChatState>((set) => ({
   updateConversationLatestMessage: (conversationId, message) => set((state) => ({
     conversations: state.conversations.map(conv =>
       conv.id === conversationId
-        ? { ...conv, latest_message: message }
+        ? { 
+            ...conv, 
+            latest_message: message,
+            unread_count: state.activeConversationId === conversationId ? 0 : conv.unread_count + 1
+          }
+        : conv
+    )
+  })),
+  markConversationAsRead: (conversationId) => set((state) => ({
+    conversations: state.conversations.map(conv =>
+      conv.id === conversationId
+        ? { ...conv, unread_count: 0 }
         : conv
     )
   }))
