@@ -2,7 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { format } from "date-fns";
-import { Send, Search, Video, MoreVertical, PlusCircle } from "lucide-react";
+import { Send, Search, Video, MoreVertical, PlusCircle, Smile } from "lucide-react";
+import { useTheme } from "next-themes";
+import EmojiPicker from 'emoji-picker-react';
 import { apiClient } from "@/api/client";
 import { useAuthStore } from "@/store/auth";
 import { useChatStore, Conversation, Message } from "@/store/chat";
@@ -13,6 +15,8 @@ export function ChatArea() {
   const { user } = useAuthStore();
   const { activeConversationId, conversations, messages, setMessages, addMessage, updateConversationLatestMessage, markConversationAsRead } = useChatStore();
   const [inputText, setInputText] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const { theme } = useTheme();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const activeConversation = conversations.find(c => c.id === activeConversationId);
@@ -52,6 +56,7 @@ export function ChatArea() {
 
     const body = inputText;
     setInputText("");
+    setShowEmojiPicker(false);
 
     try {
       const { data } = await apiClient.post(`/conversations/${activeConversationId}/messages`, {
@@ -181,6 +186,23 @@ export function ChatArea() {
               placeholder="Message"
               className="w-full rounded-full bg-muted border-none h-10 pl-5 pr-12 text-[15px] focus-visible:ring-0 text-foreground placeholder:text-muted-foreground"
             />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="absolute right-1 top-0.5 text-muted-foreground hover:bg-transparent hover:text-foreground h-9 w-9"
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            >
+              <Smile className="w-5 h-5" />
+            </Button>
+            {showEmojiPicker && (
+              <div className="absolute bottom-12 right-0 z-50">
+                <EmojiPicker
+                  onEmojiClick={(emojiData) => setInputText((prev) => prev + emojiData.emoji)}
+                  theme={(theme as 'dark' | 'light') || 'light'}
+                />
+              </div>
+            )}
           </div>
           <Button
             type="submit"
