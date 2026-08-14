@@ -46,13 +46,13 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 221.2 83.2% 53.3%;
+    --primary: 220 88% 58%; /* Signal blue: #3A76F0 -> HSL ~ 220, 88%, 58% */
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --muted: 210 40% 96.1%;
+    --muted: 0 0% 94%; /* EAEAEA */
     --muted-foreground: 215.4 16.3% 46.9%;
 
     --accent: 210 40% 96.1%;
@@ -61,17 +61,53 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 220 88% 58%;
     
-    --sidebar: 0 0% 98%;
+    --sidebar: 0 0% 96%; /* F6F6F6 */
     --sidebar-foreground: 222.2 84% 4.9%;
-    --sidebar-border: 214.3 31.8% 91.4%;
-    --sidebar-accent: 210 40% 96.1%;
+    --sidebar-border: 0 0% 90%;
+    --sidebar-accent: 0 0% 92%; /* EBEBEB */
     --sidebar-accent-foreground: 222.2 47.4% 11.2%;
 
     --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 0 0% 11%; /* 1c1c1c */
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 11%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 11%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 220 88% 58%; /* Signal blue stays */
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 17%; /* 2A2A2A */
+    --muted-foreground: 0 0% 65%;
+
+    --accent: 0 0% 20%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 20%; /* 333333 */
+    --input: 0 0% 20%;
+    --ring: 220 88% 58%;
+
+    --sidebar: 0 0% 14%; /* 242424 */
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-accent: 0 0% 20%; /* 333333 */
+    --sidebar-accent-foreground: 0 0% 98%;
   }
 }
 

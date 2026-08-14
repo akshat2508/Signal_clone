@@ -103,18 +103,18 @@ export function NewChatDialog({ onClose }: { onClose: () => void }) {
                 placeholder="Group Name" 
                 value={groupName}
                 onChange={(e) => setGroupName(e.target.value)}
-                className="mb-4 bg-[#F0F0F0] border-none rounded-lg h-12 text-black"
+                className="mb-4 bg-muted border-none rounded-lg h-12 text-foreground"
               />
             </div>
           )}
 
           <div className="relative mb-4">
-            <Search className="absolute left-3 top-3.5 w-4 h-4 text-gray-500" />
+            <Search className="absolute left-3 top-3.5 w-4 h-4 text-muted-foreground" />
             <Input 
               placeholder="Search users by username or phone..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 bg-[#F0F0F0] border-none rounded-lg h-11 text-black placeholder:text-gray-500"
+              className="pl-9 bg-muted border-none rounded-lg h-11 text-foreground placeholder:text-muted-foreground"
             />
           </div>
 
@@ -122,7 +122,7 @@ export function NewChatDialog({ onClose }: { onClose: () => void }) {
             {users.map(user => (
               <div 
                 key={user.id} 
-                className="flex items-center justify-between p-3 hover:bg-[#F0F0F0] rounded-lg cursor-pointer transition-colors"
+                className="flex items-center justify-between p-3 hover:bg-muted rounded-lg cursor-pointer transition-colors"
                 onClick={() => activeTab === 'direct' ? handleStartDirect(user.id) : toggleUserSelection(user.id)}
               >
                 <div className="flex items-center gap-3">
@@ -135,8 +135,8 @@ export function NewChatDialog({ onClose }: { onClose: () => void }) {
                   </div>
                 </div>
                 {activeTab === 'group' && (
-                  <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${selectedUsers.includes(user.id) ? 'bg-primary border-primary text-white' : 'border-gray-300'}`}>
-                    {selectedUsers.includes(user.id) && <div className="w-2.5 h-2.5 bg-white rounded-full" />}
+                  <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${selectedUsers.includes(user.id) ? 'bg-primary border-primary text-primary-foreground' : 'border-border'}`}>
+                    {selectedUsers.includes(user.id) && <div className="w-2.5 h-2.5 bg-primary-foreground rounded-full" />}
                   </div>
                 )}
               </div>
@@ -151,7 +151,7 @@ export function NewChatDialog({ onClose }: { onClose: () => void }) {
         </div>
         
         {activeTab === "group" && (
-          <div className="p-4 border-t bg-[#F6F6F6]">
+          <div className="p-4 border-t bg-sidebar border-border">
             <Button 
               className="w-full h-11 rounded-full" 
               onClick={handleCreateGroup}

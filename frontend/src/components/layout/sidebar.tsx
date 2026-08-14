@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { Search, Edit, MoreVertical, Settings, LogOut } from "lucide-react";
+import { Search, Edit, LogOut, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 import { apiClient } from "@/api/client";
 import { useAuthStore } from "@/store/auth";
 import { useChatStore, Conversation } from "@/store/chat";
@@ -15,6 +16,7 @@ export function Sidebar() {
   const { conversations, setConversations, activeConversationId, setActiveConversationId } = useChatStore();
   const [searchQuery, setSearchQuery] = useState("");
   const [isNewChatOpen, setIsNewChatOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     const fetchConversations = async () => {
@@ -50,33 +52,36 @@ export function Sidebar() {
   );
 
   return (
-    <div className="w-80 border-r border-gray-200 bg-[#F6F6F6] flex flex-col h-full">
+    <div className="w-80 border-r border-sidebar-border bg-sidebar flex flex-col h-full">
       {/* Header & Search */}
       <div className="h-[60px] flex items-center px-4 gap-3 shrink-0">
         <div className="flex items-center gap-2 shrink-0">
           <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center font-semibold text-primary">
             {user?.display_name.charAt(0).toUpperCase()}
           </div>
-          <span className="text-[13px] font-semibold text-black truncate max-w-[80px]" title={user?.display_name}>
+          <span className="text-[13px] font-semibold text-sidebar-foreground truncate max-w-[80px]" title={user?.display_name}>
             {user?.display_name}
           </span>
         </div>
 
         <div className="relative flex-1">
-          <Search className="w-4 h-4 absolute left-3 top-2.5 text-gray-500" />
+          <Search className="w-4 h-4 absolute left-3 top-2.5 text-muted-foreground" />
           <Input
             placeholder="Search"
-            className="pl-9 bg-[#EBEBEB] border-none rounded-full h-9 text-[13px] focus-visible:ring-0 text-black placeholder:text-gray-500"
+            className="pl-9 bg-sidebar-accent border-none rounded-full h-9 text-[13px] focus-visible:ring-0 text-sidebar-foreground placeholder:text-muted-foreground"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
 
-        <div className="flex items-center gap-1 shrink-0">
-          <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-500 hover:bg-gray-200" onClick={() => setIsNewChatOpen(true)} title="New Chat">
+        <div className="flex items-center shrink-0">
+          <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:bg-sidebar-accent" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} title="Toggle Theme">
+            {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </Button>
+          <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:bg-sidebar-accent" onClick={() => setIsNewChatOpen(true)} title="New Chat">
             <Edit className="w-4 h-4" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-500 hover:bg-red-100 hover:text-red-600" onClick={handleLogout} title="Logout">
+          <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:bg-red-100 hover:text-red-600" onClick={handleLogout} title="Logout">
             <LogOut className="w-4 h-4" />
           </Button>
         </div>
@@ -93,19 +98,19 @@ export function Sidebar() {
             <div
               key={conv.id}
               onClick={() => setActiveConversationId(conv.id)}
-              className={`flex items-center gap-3 p-3 cursor-pointer transition-colors relative ${isActive ? "bg-[#EAEAEA]" : "hover:bg-[#F0F0F0]"
+              className={`flex items-center gap-3 p-3 cursor-pointer transition-colors relative ${isActive ? "bg-muted" : "hover:bg-sidebar-accent"
                 }`}
             >
               {isUnread && (
-                <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#3366FF]" />
+                <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-primary" />
               )}
 
               <div className="relative ml-1 shrink-0">
-                <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center font-medium text-black">
+                <div className="w-12 h-12 rounded-full bg-sidebar-accent flex items-center justify-center font-medium text-sidebar-foreground">
                   {getConversationName(conv)?.charAt(0).toUpperCase()}
                 </div>
                 {isUnread && (
-                  <div className="absolute -top-0.5 -right-0.5 bg-[#3366FF] text-white text-[11px] font-bold min-w-[20px] h-[20px] rounded-full flex items-center justify-center px-1 border-2 border-[#F6F6F6]">
+                  <div className="absolute -top-0.5 -right-0.5 bg-primary text-primary-foreground text-[11px] font-bold min-w-[20px] h-[20px] rounded-full flex items-center justify-center px-1 border-2 border-sidebar">
                     {conv.unread_count}
                   </div>
                 )}
@@ -113,17 +118,17 @@ export function Sidebar() {
 
               <div className="flex-1 min-w-0 flex flex-col justify-center">
                 <div className="flex justify-between items-baseline mb-0.5">
-                  <h3 className={`truncate text-[15px] text-black ${isUnread ? 'font-bold' : 'font-semibold'}`}>
+                  <h3 className={`truncate text-[15px] text-sidebar-foreground ${isUnread ? 'font-bold' : 'font-semibold'}`}>
                     {getConversationName(conv)}
                   </h3>
                   {conv.latest_message && (
-                    <span className={`text-[11px] whitespace-nowrap ml-2 ${isUnread ? 'text-black font-semibold' : 'text-gray-500'}`}>
+                    <span className={`text-[11px] whitespace-nowrap ml-2 ${isUnread ? 'text-sidebar-foreground font-semibold' : 'text-muted-foreground'}`}>
                       {formatDistanceToNow(new Date(conv.latest_message.created_at), { addSuffix: false }).replace('about ', '')}
                     </span>
                   )}
                 </div>
                 <div className="flex justify-between items-center">
-                  <p className={`text-[13px] truncate pr-2 ${isUnread ? 'text-black font-medium' : 'text-gray-500'}`}>
+                  <p className={`text-[13px] truncate pr-2 ${isUnread ? 'text-sidebar-foreground font-medium' : 'text-muted-foreground'}`}>
                     {conv.latest_message ? conv.latest_message.body : "Start a conversation"}
                   </p>
                   {isSentByMe && (
