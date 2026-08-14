@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { format } from "date-fns";
 import { Send, Search, Video, MoreVertical, PlusCircle, Smile } from "lucide-react";
 import { useTheme } from "next-themes";
-import EmojiPicker from 'emoji-picker-react';
+import EmojiPicker, { Theme } from 'emoji-picker-react';
 import { apiClient } from "@/api/client";
 import { useAuthStore } from "@/store/auth";
 import { useChatStore, Conversation, Message } from "@/store/chat";
@@ -199,7 +199,7 @@ export function ChatArea() {
               <div className="absolute bottom-12 right-0 z-50">
                 <EmojiPicker
                   onEmojiClick={(emojiData) => setInputText((prev) => prev + emojiData.emoji)}
-                  theme={(theme as 'dark' | 'light') || 'light'}
+                  theme={theme === 'dark' ? Theme.DARK : Theme.LIGHT}
                 />
               </div>
             )}
