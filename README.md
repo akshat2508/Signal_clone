@@ -14,6 +14,11 @@
 
 > **Note on Testing**: To test the real-time functionality (like instant messaging and typing indicators), open the frontend application in two separate browser windows (or one normal and one incognito) and log in with two different accounts. 
 
+### 🧪 Test Accounts
+You can use the following pre-configured test accounts to try out the application:
+- **User 1:** Username: `user_1` | Password: `password123`
+- **User 2:** Username: `user_2` | Password: `password123`
+
 ---
 
 ## 🎨 Features
